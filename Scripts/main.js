@@ -1,0 +1,1 @@
+document.getElementById('imgD').setAttribute('draggable', false);
