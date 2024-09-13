@@ -1,7 +1,5 @@
 @font-face { font-family: BR; src: url('Assets/BR.ttf'); }
 
-/* COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP */
-@media only screen and (min-width: 992px) {
 .about-block {
     width: 100%;
     height: 100vh;
@@ -82,6 +80,9 @@ p {
     color: white;
     font-size: 15px;
 }
+
+/* COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP COMP */
+@media only screen and (min-width: 992px) {
 
 body {
     user-select: none;
