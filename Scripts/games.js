@@ -1,6 +1,6 @@
 const games = [
-    { name: 'Break The Siege', imageSrc: 'Games/BreakTheSiege/logo.png' },
-    { name: 'Potion Cooker', imageSrc: 'Games/PotionCooker/logo.png' }
+    { name: 'Break The Siege', file_name: 'BreakTheSiege', imageSrc: 'Games/BreakTheSiege/logo.png' },
+    { name: 'Potion Cooker', file_name: 'BreakTheSiege', imageSrc: 'Games/PotionCooker/logo.png' }
     
 ];
 
@@ -12,6 +12,7 @@ function createGameBlocks() {
         block.className = 'about-project-block';
 
         const link = document.createElement('a');
+        link.href='Games/'+game.file_name+'/GameData/main.html';
 
         const img = document.createElement('img');
         img.className = 'about-project-image-block';
