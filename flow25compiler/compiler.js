@@ -10,6 +10,11 @@ class Flow25Compiler {
         this.currentLine = 1; // Start at line 1 to skip "#comp x8_mod"
         this.lines = [];
         this.callStack = []; // Add a call stack for function calls
+
+        this.backBuffer = document.createElement("canvas");
+        this.backBuffer.width = 256;
+        this.backBuffer.height = 256;
+        this.backCtx = this.backBuffer.getContext("2d");
     }
 
     compile(code) {
@@ -213,11 +218,11 @@ class Flow25Compiler {
         const command = tokens[1];
         switch (command) {
             case "reset":
-                this.ctx.clearRect(0, 0, 256, 256); // Clear the canvas
+                this.backCtx.clearRect(0, 0, 256, 256); // Clear the canvas
                 break;
             case "clear_screen":
-                this.ctx.fillStyle = "black";
-                this.ctx.fillRect(0, 0, 256, 256); // Fill the canvas with black color
+                this.backCtx.fillStyle = "black";
+                this.backCtx.fillRect(0, 0, 256, 256); // Fill the canvas with black color
                 break;
             case "set_char":
                 if (this.x === undefined || this.y === undefined) {
@@ -230,11 +235,11 @@ class Flow25Compiler {
                     this.stopExecution();
                     return;
                 }
-                const char = String.fromCharCode(this.variables["gpu_data"] || 65); // Default to 'A' if no data
+                const char = this.variables["gpu_data"] || ""; // Default to 'A' if no data
                 if (this.x >= 0 && this.x <= 255 && this.y >= 0 && this.y <= 255) {
-                    this.ctx.fillStyle = this.color;
-                    this.ctx.font = "16px monospace";
-                    this.ctx.fillText(char, this.x, this.y); // Render character at the specified (x, y) position
+                    this.backCtx.fillStyle = this.color;
+                    this.backCtx.font = "16px monospace";
+                    this.backCtx.fillText(char, this.x, this.y); // Render character at the specified (x, y) position
                 } else {
                     this.output(`Error: Invalid coordinates (${this.x}, ${this.y}). Must be between 0 and 255.`);
                     this.stopExecution(); // Stop execution if coordinates are out of bounds
@@ -242,7 +247,7 @@ class Flow25Compiler {
                 break;
             case "set_x":
                 const xVar = tokens[2]; // Variable for x (e.g., x)
-                this.x = this.getVariableValue(xVar); // Retrieve the value of the variable
+                this.x = this.variables["gpu_data"] || 0; // Retrieve the value of the variable
                 if (this.x < 0 || this.x > 255) {
                     this.output(`Error: Invalid x-coordinate ${this.x}. Must be between 0 and 255.`);
                     this.stopExecution(); // Stop execution if x is out of bounds
@@ -250,7 +255,7 @@ class Flow25Compiler {
                 break;
             case "set_y":
                 const yVar = tokens[2]; // Variable for y (e.g., y)
-                this.y = this.getVariableValue(yVar); // Retrieve the value of the variable
+                this.y = this.variables["gpu_data"] || 0; // Retrieve the value of the variable
                 if (this.y < 0 || this.y > 255) {
                     this.output(`Error: Invalid y-coordinate ${this.y}. Must be between 0 and 255.`);
                     this.stopExecution(); // Stop execution if y is out of bounds
@@ -265,8 +270,10 @@ class Flow25Compiler {
                     this.stopExecution();
                 }
                 break;
-            case "render":
-                // No additional action needed here since rendering is handled in `set_char`
+            case "flip":
+                this.ctx.clearRect(0, 0, 256, 256);
+                this.ctx.drawImage(this.backBuffer, 0, 0);
+                this.backCtx.clearRect(0, 0, 256, 256);
                 break;
             default:
                 this.output(`Error: Unknown GPU command '${command}'`);
