@@ -1,43 +1,49 @@
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flow25 Compiler</title>
-<link rel="stylesheet" href="styles.css">
-<link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flow25 Compiler</title>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body>
-<div class="top-bar">
-    <span>Flow25</span>
-    <div class="buttons">
-    <button id="new-btn">New</button>
-    <button id="save-btn">Save</button>
-    <button id="load-btn">Load</button>
+ <body>
+    <div class="top-bar">
+        <!--<span>Flow25</span>-->
+        <img src="logo.png" width="10%" height="auto" user-select="none">
+        <div class="buttons">
+            <button id="documentation-btn">Documentation</button>
+            <button id="export-js-btn">Export to HTML</button>
+            <button id="new-btn">New</button>
+            <button id="save-btn">Save</button>
+            <button id="save-lib-btn">Save (lib25)</button>
+            <button id="load-btn">Load</button>
+            <button id="add-lib-btn">Add Library</button>
+            <br>
+            <button id="run-btn">Run</button>
+            <button id="stop-btn">Stop</button>
+        </div>
     </div>
-</div>
-<div class="main-bar">
-    <div class="code-editor">
-    <textarea id="code-input" spellcheck="false" class="language-javascript">#comp x8_mod
+    <div class="main-bar">
+        <div class="code-editor">
+        <textarea id="code-input" spellcheck="false" class="language-flow25">#comp x8_mod
 
 var msg %= "Hello, World!"
 out msg
 
 quit</textarea>
-    </div>
-    <div class="output-section">
-    <div class="output-window">
-        <canvas id="output-canvas" width="256" height="256"></canvas>
-        <div class="output-controls">
-        <button id="run-btn">Run</button>
-        <button id="stop-btn">Stop</button>
+
+        </div>
+        <div class="output-section">
+        <div class="output-window">
+            <canvas id="output-canvas" width="256" height="256"></canvas>
+            <div class="output-controls">
+            </div>
+        </div>
+        <div class="text-output">
+            <pre id="text-output"></pre>
+        </div>
         </div>
     </div>
-    <div class="text-output">
-        <pre id="text-output"></pre>
-    </div>
-    </div>
-</div>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-<script src="compiler.js"></script>
-<script src="script.js"></script>
+    <script src="library.js"></script>
+    <script src="compiler.js"></script>
+    <script src="script.js"></script>
 </body>
   

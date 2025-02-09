@@ -10,19 +10,12 @@ class Flow25Compiler {
         this.currentLine = 1; // Start at line 1 to skip "#comp x8_mod"
         this.lines = [];
         this.callStack = []; // Add a call stack for function calls
-        this.libraries = {};
 
         this.backBuffer = document.createElement("canvas");
         this.backBuffer.width = 256;
         this.backBuffer.height = 256;
         this.backCtx = this.backBuffer.getContext("2d");
     }
-
-    includeLibrary(libraryName, libraryCode) {
-        const flowLibCompiler = new FlowLibCompiler();
-        flowLibCompiler.compile(libraryCode);
-        this.libraries[libraryName] = flowLibCompiler.getLibrary(libraryName);
-      }
 
     compile(code) {
         this.variables = {};
@@ -60,61 +53,44 @@ class Flow25Compiler {
         const line = this.lines[this.currentLine];
         const tokens = line.split(" ");
 
-        if (tokens[0] === "call_lib") {
-            const libraryName = tokens[1];
-            const functionName = tokens[2];
-            const args = tokens.slice(3).map(arg => this.variables[arg] || parseInt(arg, 10));
-        
-            this.callLibraryFunction(libraryName, functionName, args);
-            this.currentLine++;
-            setTimeout(() => this.executeCodeAsync(), 0);
-            return;
-        }
-
         // Skip labels during execution (they're already parsed)
-        if (line.startsWith("label ")) {
+        if (line.startsWith("skibidi ")) { // label
             this.currentLine++;
             setTimeout(() => this.executeCodeAsync(), 0);
             return;
         }
-        // ORIGIN98ADSA
-        switch (tokens[0]) {
-            case "//":
 
-                break;
-            case "var":
+        switch (tokens[0]) {
+            case "rizz": // var
                 this.handleVariableDeclaration(tokens);
                 break;
-            case "set":
+            case "smash": // set
                 this.handleSetOperation(tokens);
                 break;
-            case "call":
+            case "zap": // call
                 this.handleFunctionCall(tokens);
                 break;
-            case "return":
+            case "return": // bussin
                 this.handleReturn();
                 break;
-            case "if":
+            case "edge": // if
                 this.handleIfStatement(tokens);
                 break;
-            case "run":
+            case "flex": // run
                 this.handleRunCommand(tokens);
                 break;
-            case "gpu_send":
+            case "shiny": // gpu_send
                 this.handleGPUSend(tokens);
                 break;
-            case "gpu_call":
+            case "bling": // gpu_call
                 this.handleGPUCall(tokens);
                 break;
-            case "out":
+            case "yap": // out
                 this.handleOutOperation(tokens);
                 break;
-            case "quit":
+            case "ragequit": // quit
                 this.isRunning = false;
                 this.output("Program exited successfully.");
-                break;
-            case "pop":
-                this.variables[tokens[1]] = this.variables["push_data"];
                 break;
             default:
                 this.output(`Error: Unknown command '${tokens[0]}'`);
@@ -129,106 +105,44 @@ class Flow25Compiler {
         }
     }
 
-    callLibraryFunction(libraryName, functionName, args) {
-        const library = this.libraries[libraryName];
-        if (!library || !library[functionName]) {
-            this.output(`Error: Function '${functionName}' not found in library '${libraryName}'.`);
-            return;
-        }
-    
-        const functionData = library[functionName];
-        const functionVariables = {};
-    
-        // Set arguments
-        functionData.args.forEach((arg, index) => {
-            functionVariables[arg] = args[index];
-        });
-    
-        // Execute function code
-        const functionCode = functionData.code;
-        for (const line of functionCode) {
-            const tokens = line.split(" ");
-            switch (tokens[0]) {
-                case "//":
-
-                    break;
-                case "var":
-                    this.handleVariableDeclaration(tokens, functionVariables);
-                    break;
-                case "set":
-                    this.handleSetOperation(tokens, functionVariables);
-                    break;
-                case "call": //
-                    this.handleFunctionCall(tokens, functionVariables);
-                    break;
-                case "return": //
-                    this.handleReturn(functionVariables);
-                    break;
-                case "if": //
-                    this.handleIfStatement(tokens, functionVariables);
-                    break;
-                case "run": //
-                    this.handleRunCommand(tokens, functionVariables);
-                    break;
-                case "gpu_send": //
-                    this.handleGPUSend(tokens, functionVariables);
-                    break;
-                case "gpu_call": //
-                    this.handleGPUCall(tokens, functionVariables);
-                    break;
-                case "out":
-                    this.handleOutOperation(tokens, functionVariables);
-                    break;
-                case "quit": //
-                    this.isRunning = false;
-                    this.output("Program exited successfully.");
-                    return;
-                case "pop": //
-                    functionVariables[tokens[1]] = functionVariables["push_data"];
-                    break;
-                case "push": //
-                    this.variables["push_data"] = functionVariables[tokens[1]];
-                    break;
-                default:
-                    this.output(`Error: Unknown command '${tokens[0]}'`);
-                    break;
-            }
-        }
-    }
-
-    handleVariableDeclaration(tokens, functionVariables = this.variables) {
+    handleVariableDeclaration(tokens) {
         const [_, name, operator, ...valueParts] = tokens;
         const value = valueParts.join(" "); // Join everything after the operator to handle strings with spaces
         if (operator === "=") {
-            functionVariables[name] = parseInt(value, 10); // For numbers
+            this.variables[name] = parseInt(value, 10); // For numbers
+          //if (value.startsWith('"') && value.endsWith('"')) {
+          //  this.variables[name] = value.slice(1, -1); // Remove quotes around the string
+          //} else {
+          //  this.variables[name] = parseInt(value, 10); // For numbers
+          //}
         } else if (operator === "%=") {
-            functionVariables[name] = value.slice(1, -1); // For strings
+            this.variables[name] = value.slice(1, -1);
         } else {
-            this.output(`Error: Invalid operator '${operator}'`);
+          this.output(`Error: Invalid operator '${operator}'`);
         }
-    }
+      }
       
-    handleSetOperation(tokens, functionVariables = this.variables) {
+      handleSetOperation(tokens) {
         const [_, name, operator, ...valueParts] = tokens;
         const value = valueParts.join(" "); // Join everything after the operator to handle strings with spaces
         if (operator === "=") {
-            if (value.startsWith('"') && value.endsWith('"')) {
-                functionVariables[name] = value.slice(1, -1); // Remove quotes around the string
-            } else {
-                functionVariables[name] = functionVariables[value] || parseInt(value, 10); // Handle numbers
-            }
+          if (value.startsWith('"') && value.endsWith('"')) {
+            this.variables[name] = value.slice(1, -1); // Remove quotes around the string
+          } else {
+            this.variables[name] = this.variables[value] || parseInt(value, 10); // Handle numbers
+          }
         } else if (operator === "+=") {
-            if (typeof functionVariables[name] === 'string') {
-                functionVariables[name] += value.startsWith('"') && value.endsWith('"') ? value.slice(1, -1) : functionVariables[value];
-            } else {
-                functionVariables[name] += functionVariables[value] || parseInt(value, 10);
-            }
+          if (typeof this.variables[name] === 'string') {
+            this.variables[name] += value.startsWith('"') && value.endsWith('"') ? value.slice(1, -1) : this.variables[value];
+          } else {
+            this.variables[name] += this.variables[value] || parseInt(value, 10);
+          }
         } else if (operator === "-=") {
-            functionVariables[name] -= functionVariables[value] || parseInt(value, 10);
+          this.variables[name] -= this.variables[value] || parseInt(value, 10);
         } else {
-            this.output(`Error: Invalid operator '${operator}'`);
+          this.output(`Error: Invalid operator '${operator}'`);
         }
-    }
+      }
 
     handleFunctionCall(tokens) {
         const labelName = tokens[1];
@@ -251,11 +165,11 @@ class Flow25Compiler {
         }
     }
 
-    handleIfStatement(tokens, functionVariables = this.variables) {
+    handleIfStatement(tokens) {
         const [_, a, operator, b, __, labelName] = tokens;
-        const valueA = functionVariables[a] || parseInt(a, 10);
-        const valueB = functionVariables[b] || parseInt(b, 10);
-    
+        const valueA = this.variables[a] || parseInt(a, 10);
+        const valueB = this.variables[b] || parseInt(b, 10);
+
         let condition = false;
         switch (operator) {
             case "=":
@@ -274,7 +188,7 @@ class Flow25Compiler {
                 this.output(`Error: Invalid operator '${operator}'`);
                 return;
         }
-    
+
         if (condition) {
             const labelIndex = this.labels[labelName];
             if (labelIndex !== undefined) {
@@ -295,19 +209,20 @@ class Flow25Compiler {
         }
     }
 
-    handleGPUSend(tokens, functionVariables = this.variables) {
+    handleGPUSend(tokens) {
         const value = tokens[1];
-        this.variables["gpu_data"] = functionVariables[value] || parseInt(value, 10);
+        this.variables["gpu_data"] = this.variables[value] || parseInt(value, 10);
     }
 
-    handleGPUCall(tokens, functionVariables = this.variables) {
+    handleGPUCall(tokens) {
         const command = tokens[1];
         switch (command) {
             case "reset":
                 this.backCtx.clearRect(0, 0, 256, 256); // Clear the canvas
                 break;
             case "clear_screen":
-                this.backCtx.clearRect(0, 0, 256, 256); // Fill the canvas with black color
+                this.backCtx.fillStyle = "black";
+                this.backCtx.fillRect(0, 0, 256, 256); // Fill the canvas with black color
                 break;
             case "set_char":
                 if (this.x === undefined || this.y === undefined) {
@@ -347,13 +262,13 @@ class Flow25Compiler {
                 }
                 break;
             case "set_color":
-                const colorValue = this.variables["gpu_data"] || "rgb(255, 255, 255)"; // Default to white if no data
-                //if (colorValue >= 0 && colorValue <= 255) {
-                    this.color = colorValue; // Grayscale color
-                //} else {
-                //    this.output("Error: Invalid color value. Must be between 0 and 255.");
-               //     this.stopExecution();
-              //  }
+                const colorValue = this.variables["gpu_data"] || 255; // Default to white if no data
+                if (colorValue >= 0 && colorValue <= 255) {
+                    this.color = `rgb(${colorValue}, ${colorValue}, ${colorValue})`; // Grayscale color
+                } else {
+                    this.output("Error: Invalid color value. Must be between 0 and 255.");
+                    this.stopExecution();
+                }
                 break;
             case "flip":
                 this.ctx.clearRect(0, 0, 256, 256);
@@ -366,14 +281,14 @@ class Flow25Compiler {
         }
     }
 
-    handleOutOperation(tokens, functionVariables = this.variables) {
-        const value = functionVariables[tokens[1]];
+    handleOutOperation(tokens, lineIndex) {
+        const value = this.variables[tokens[1]];
         if (value !== undefined) {
-            this.output(value);
+          this.output(value, lineIndex);
         } else {
-            this.output(`Error: Variable '${tokens[1]}' not found`);
+          this.output(`Error: Variable '${tokens[1]}' not found`, lineIndex);
         }
-    }
+      }
       
 
     getVariableValue(variable) {

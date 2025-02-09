@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Documentation</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #2c3e50;
+            color: #ecf0f1;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .return-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: #3498db;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+
+        .return-btn:hover {
+            background: #2980b9;
+        }
+
+        h1, h2, h3 {
+            color: #3498db;
+            margin-top: 20px;
+        }
+
+        code {
+            background: #34495e;
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-family: monospace;
+        }
+
+        pre {
+            background: #34495e;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+
+        .example {
+            margin: 20px 0;
+            padding: 15px;
+            background: #34495e;
+            border-left: 5px solid #3498db;
+        }
+
+        .example h4 {
+            margin-top: 0;
+            color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="return-btn">Return to Editor</a>
+    <div class="container">
+        <h1>Flow25 & lib25 Documentation</h1>
+        <p>Welcome to the documentation for the Flow25 programming language and its library system, lib25. This guide will walk you through the syntax, commands, and examples for both languages.</p>
+
+        <h2>Flow25 Language</h2>
+        <p>Flow25 is a simple programming language designed for creating small programs and games. Below are the available commands:</p>
+
+        <h3>Basic Commands</h3>
+        <ul>
+            <li><code>#comp x8_mod</code>: Must be the first line of every Flow25 program.</li>
+            <li><code>var name = value</code>: Declares a variable (int).</li>
+            <li><code>var name %= "value"</code>: Declares a variable (string).</li>
+            <li><code>set name = value</code>: Assigns a value to a variable.</li>
+            <li><code>set name += value</code>: Adds a value to a variable.</li>
+            <li><code>set name -= value</code>: Subtracts a value from a variable.</li>
+            <li><code>out value</code>: Outputs a value to the console.</li>
+            <li><code>quit</code>: Ends the program.</li>
+        </ul>
+
+        <h3>Control Flow</h3>
+        <ul>
+            <li><code>if a >= b then label</code>: Jumps to a label if the condition is true.</li>
+            <li><code>run label</code>: Jumps to a label.</li>
+            <li><code>call label</code>: Jumps to a label, also storing adress in call stack.</li>
+            <li><code>return</code>: Returns to the latest call stack adress.</li>
+            <li><code>label name</code>: Defines a label.</li>
+        </ul>
+
+        <h3>GPU Commands</h3>
+        <ul>
+            <li><code>gpu_send value</code>: Sends a value to the GPU.</li>
+            <li><code>gpu_call command</code>: Executes a GPU command (<code>set_x</code>, <code>set_y</code>, <code>set_char</code>, <code>set_color</code>, <code>flip</code>, <code>reset</code>).</li>
+        </ul>
+
+        <h3>Example</h3>
+        <div class="example">
+            <h4>Hello World</h4>
+            <pre>
+#comp x8_mod
+
+var message %= "Hello, World!"
+out message
+
+quit
+            </pre>
+        </div>
+
+        <h2>lib25 Language</h2>
+        <p>lib25 is a library system for Flow25. It allows you to create reusable functions and include them in your Flow25 programs.</p>
+
+        <h3>Creating a Library</h3>
+        <ul>
+            <li><code>#comp lib25</code>: Must be the first line of every lib25 file.</li>
+            <li><code>create library_name</code>: Creates a new library.</li>
+            <li><code>add function_name</code>: Defines a new function.</li>
+            <li><code>arg name</code>: Defines a function argument.</li>
+            <li><code>end function_name</code>: Ends a function definition.</li>
+            <li><code>push value</code>: Stores a value to push_data (can be read using pop).</li>
+            <li><code>pop value</code>: Gets a value which was stored in push_data.</li>
+        </ul>
+
+        <h3>Example</h3>
+        <div class="example">
+            <h4>Math Library</h4>
+            <pre>
+#comp lib25
+create math_lib
+
+add add_numbers
+arg x
+arg y
+var result = 0
+set result += x
+set result += y
+push result
+end add_numbers
+
+add subtract_numbers
+arg x
+arg y
+var result = 0
+set result += x
+set result -= y
+push result
+end subtract_numbers
+            </pre>
+        </div>
+
+        <h3>Using a Library</h3>
+        <p>To use a library in your Flow25 program, include it with the <code>Add Library</code> button and call its functions with <code>call_lib</code>.</p>
+
+        <div class="example">
+            <h4>Using the Math Library</h4>
+            <pre>
+#comp x8_mod
+
+var result = 0
+call_lib math_lib add_numbers 5 10
+pop result
+out result  // Outputs 15
+
+call_lib math_lib subtract_numbers 20 7
+pop result
+out result  // Outputs 13
+
+quit
+            </pre>
+        </div>
+
+        <h2>Conclusion</h2>
+        <p>Flow25 and lib25 are powerful tools for creating small programs and games. With this documentation, you should be able to get started quickly. Happy coding!</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainRot Compiler</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet">
+    </head>
+    <body>
+    <div class="top-bar">
+        <span>FlowBR</span>
+        <div class="buttons">
+        <button id="new-btn">New</button>
+        <button id="save-btn">Save</button>
+        <button id="save-lib-btn">Save (lib25)</button>
+        <button id="load-btn">Load</button>
+        <button id="add-lib-btn">Add Library</button>
+        </div>
+    </div>
+    <div class="main-bar">
+        <div class="code-editor">
+        <textarea id="code-input" spellcheck="false" class="language-javascript">#comp x8_mod
+    
+rizz msg %= "Hello, World!"
+yap msg
+    
+ragequit</textarea>
+        </div>
+        <div class="output-section">
+        <div class="output-window">
+            <canvas id="output-canvas" width="256" height="256"></canvas>
+            <div class="output-controls">
+            <button id="run-btn">Run</button>
+            <button id="stop-btn">Stop</button>
+            </div>
+        </div>
+        <div class="text-output">
+            <pre id="text-output"></pre>
+        </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="compiler_brainrot.js"></script>
+    <script src="compiler_brainrot.js"></script>
+    <script src="script.js"></script>
+    </body>
+      
